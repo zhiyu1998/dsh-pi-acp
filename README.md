@@ -1,5 +1,7 @@
 # dsh-pi-acp
 
+![release](https://img.shields.io/github/v/release/zhiyu1998/dsh-pi-acp?style=flat-square)
+
 把 **pi** 编码代理接进 DeepSeek Harness。本插件是 [`pi-acp`](https://github.com/svkozak/pi-acp) 的客户端，
 用 ACP（JSON-RPC 2.0 over stdio）驱动它，再把能力暴露成三个模型可调用的工具。
 
@@ -15,6 +17,9 @@ DSH 会话 ──pi_run──► 本插件 ──stdio/JSON-RPC──► pi-acp 
 ```powershell
 dsh plugin add https://github.com/zhiyu1998/dsh-pi-acp
 ```
+
+也可以从 [Releases](https://github.com/zhiyu1998/dsh-pi-acp/releases) 下 `dsh-pi-acp-<version>.tgz`
+（推 `v*` tag 时由 GitHub Actions 自动打包发布）。
 
 重启 DSH：工具面出现 `pi_run` / `pi_session` / `pi_status`，设置里多出「pi（ACP）」。
 
