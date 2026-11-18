@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "pi ACP bridge",
+    "description": "Drive the pi coding agent through its pi-acp adapter: pi_run / pi_session / pi_status tools with reusable sessions"
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "name": "dsh-pi-acp",
+  "version": "0.3.0",
+  "description": "Drive the pi coding agent from DeepSeek Harness through its ACP adapter (pi-acp): model-facing tools, background turns, and a Settings page for the defaults.",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./lib/client.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "index.js",
+    "lib/client.js",
+    "cordis.patch.yml",
+    "locale/*.json",
+    "icon.svg",
+    "README.md",
+    "LICENSE"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": [
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-settings"
+      ],
+      "platform": "web"
+    }
+  },
+  "dependencies": {
+    "@deepseek-ai/schemastery": "~3.19.0"
+  },
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "dsh-plugin",
+    "pi",
+    "pi-acp",
+    "acp",
+    "agent-client-protocol",
+    "coding-agent"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zhiyu1998/dsh-pi-acp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/zhiyu1998/dsh-pi-acp/issues"
+  },
+  "homepage": "https://github.com/zhiyu1998/dsh-pi-acp#readme",
+  "author": "zhiyu1998",
+  "license": "MIT"
+}

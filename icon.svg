@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="pi ACP bridge">
+  <title>pi ACP bridge</title>
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="#0f172a"/>
+  <path d="M20 17h6.6c5.6 0 9.4 3.4 9.4 8.9 0 5.6-3.9 9.1-9.7 9.1H26v11h-6V17zm6 4.6v8.8h1.6c2.5 0 4-1.7 4-4.4 0-2.7-1.5-4.4-4.1-4.4H26z" fill="#7dd3fc"/>
+  <circle cx="45" cy="41" r="4" fill="#38bdf8"/>
+  <circle cx="53" cy="24" r="3" fill="#0ea5e9"/>
+  <path d="M45 41 53 24" stroke="#38bdf8" stroke-width="2" stroke-linecap="round"/>
+  <path d="M30 46h11" stroke="#7dd3fc" stroke-width="2.4" stroke-linecap="round"/>
+</svg>

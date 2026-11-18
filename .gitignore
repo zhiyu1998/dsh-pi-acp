@@ -1,0 +1,8 @@
+node_modules/
+*.log
+*.bak
+*.bak-*
+*.bak-before-*
+.pi-acp-*
+.DS_Store
+Thumbs.db

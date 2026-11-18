@@ -1,0 +1,5 @@
+# Inserts the pi-acp host row. The row id doubles as the settings identity and
+# is the id a profile patch overrides to tune the defaults below.
+- insert:
+    - id: pi-acp
+      name: '@local/dsh-pi-acp'

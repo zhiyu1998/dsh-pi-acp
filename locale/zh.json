@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "pi ACP 调用",
+    "description": "通过 pi-acp 适配器把任务交给 pi 编码代理执行：新增 pi_run / pi_session / pi_status 三个工具，会话可复用"
+  }
+}
