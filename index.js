@@ -50,6 +50,9 @@ const traceTo = (file, message) => {
 }
 traceTo('pi-acp-import.log', 'module imported')
 
+/** Thinking levels pi understands, in display order. */
+const THINKING_LEVELS = ['off', 'minimal', 'low', 'medium', 'high', 'max']
+
 /**
  * Catalogue and defaults of the pi model runtime, read from `~/.pi/agent`:
  * `models.json` holds every provider's model list (`pi`'s own `/model` source)
@@ -61,16 +64,29 @@ let catalogCache = { at: 0, value: null }
 const readPiCatalog = () => {
   if (catalogCache.value !== null && Date.now() - catalogCache.at < 60_000) return catalogCache.value
   const home = process.env.PI_CODING_AGENT_DIR ?? join(process.env.USERPROFILE ?? process.env.HOME ?? '.', '.pi', 'agent')
-  const value = { models: [], defaults: { provider: null, modelId: null, effective: null } }
+  const value = { models: [], thinkingLevels: THINKING_LEVELS, defaults: { provider: null, modelId: null, effective: null } }
   try {
     const raw = JSON.parse(readFileSync(join(home, 'models.json'), 'utf8'))
     for (const [provider, entry] of Object.entries(raw.providers ?? {})) {
       for (const model of entry?.models ?? []) {
         if (typeof model?.id !== 'string' || model.id === '') continue
+        // `thinkingLevelMap` marks unsupported levels with null; `off` is always
+        // available, and a model without a map only supports `off`.
+        const map = model.thinkingLevelMap ?? null
+        const thinking =
+          map === null
+            ? ['off']
+            : [
+                'off',
+                ...THINKING_LEVELS.filter(
+                  (level) => level !== 'off' && map[level] !== null && map[level] !== undefined,
+                ),
+              ]
         value.models.push({
           provider,
           id: model.id,
           name: typeof model.name === 'string' ? model.name : model.id,
+          thinking,
         })
       }
     }
