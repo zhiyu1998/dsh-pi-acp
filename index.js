@@ -51,6 +51,45 @@ const traceTo = (file, message) => {
 traceTo('pi-acp-import.log', 'module imported')
 
 /**
+ * Catalogue and defaults of the pi model runtime, read from `~/.pi/agent`:
+ * `models.json` holds every provider's model list (`pi`'s own `/model` source)
+ * and `settings.json` holds the user's `defaultProvider` / `defaultModel`.
+ * Cached for a minute so the Settings page can ask cheaply.
+ * @returns {{models: {provider: string, id: string, name: string}[], defaults: {provider: string | null, modelId: string | null, effective: string | null}, error?: string}}
+ */
+let catalogCache = { at: 0, value: null }
+const readPiCatalog = () => {
+  if (catalogCache.value !== null && Date.now() - catalogCache.at < 60_000) return catalogCache.value
+  const home = process.env.PI_CODING_AGENT_DIR ?? join(process.env.USERPROFILE ?? process.env.HOME ?? '.', '.pi', 'agent')
+  const value = { models: [], defaults: { provider: null, modelId: null, effective: null } }
+  try {
+    const raw = JSON.parse(readFileSync(join(home, 'models.json'), 'utf8'))
+    for (const [provider, entry] of Object.entries(raw.providers ?? {})) {
+      for (const model of entry?.models ?? []) {
+        if (typeof model?.id !== 'string' || model.id === '') continue
+        value.models.push({
+          provider,
+          id: model.id,
+          name: typeof model.name === 'string' ? model.name : model.id,
+        })
+      }
+    }
+    const settings = JSON.parse(readFileSync(join(home, 'settings.json'), 'utf8'))
+    const provider = typeof settings.defaultProvider === 'string' ? settings.defaultProvider : null
+    const modelId = typeof settings.defaultModel === 'string' ? settings.defaultModel : null
+    value.defaults = {
+      provider,
+      modelId,
+      effective: provider !== null && modelId !== null ? `${provider}/${modelId}` : modelId,
+    }
+  } catch (error) {
+    value.error = error instanceof Error ? error.message : String(error)
+  }
+  catalogCache = { at: Date.now(), value }
+  return value
+}
+
+/**
  * Settings fields declared `.volatile()` arrive as `{ get() }` refs; plain
  * values pass through untouched so the same code works with or without them.
  * @param {unknown} config - raw loader config.
@@ -1658,6 +1697,7 @@ function setup(ctx, config = {}) {
                   exists: existsSync(spec.entry),
                 },
                 pi: { version: versions.pi ?? null },
+                piDefaults: readPiCatalog().defaults,
                 thinking: manager.settings.thinking,
                 model: manager.settings.model,
               }
@@ -1704,6 +1744,20 @@ function setup(ctx, config = {}) {
           },
         }),
       'pi-acp: diagnose route',
+    )
+    // The model picker's data: every model pi knows about plus its own default.
+    webCtx.effect(
+      () =>
+        webCtx.webServer.register({
+          kind: 'exact',
+          path: '/pi-acp/models',
+          handler: (_req, res) => {
+            const catalog = readPiCatalog()
+            res.writeHead(200, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' })
+            res.end(JSON.stringify(catalog))
+          },
+        }),
+      'pi-acp: models route',
     )
   })
 }

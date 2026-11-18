@@ -71,8 +71,13 @@ dsh plugin add https://github.com/zhiyu1998/dsh-pi-acp
 
 ## 设置页
 
-设置里的「pi（ACP）」一级分区：页首一行安装检测（`pi-acp` 版本、`pi` 版本、重新检测，数据来自只读路由
-`GET /pi-acp/diagnose`），下面是 DSH 原生表单，编辑思考强度、默认模型、单轮超时、工具权限、并发轮数。
+设置里的「pi（ACP）」一级分区：
+
+- **安装检测**：`pi-acp` 版本、`pi` 版本、重新检测，数据来自只读路由 `GET /pi-acp/diagnose`。
+- **默认模型**：默认勾选「跟随 pi 自己的默认模型」，右侧显示当前生效的模型（读 `~/.pi/agent/settings.json` 的
+  `defaultProvider` / `defaultModel`）。取消勾选后出现下拉框，选项是 pi 自己的模型目录
+  （`~/.pi/agent/models.json`，即 `/model` 那张表，按 provider 分组），选中后保存即生效覆盖。
+- **其他字段**：思考强度、单轮超时、工具权限、并发轮数，用 DSH 原生表单。
 
 ## 排障
 
